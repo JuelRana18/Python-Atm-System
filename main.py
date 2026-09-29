@@ -126,15 +126,16 @@ def verify_pin(account_no, entered_pin):
 
 # STEP 6
 # Athenticate_user function
-def athenticate_user(account_no):
+def athenticate_user(account_no, messages):
     # call get_account() for filter account_no
     account = get_account(account_no)
     if account is None:
         return None
-    entered_pin = input('Enter your pin')
+    entered_pin = input(messages['enter_pin'])
     if verify_pin(account_no, entered_pin):
         return account
     else:
+        print(messages['invalid_pin'])
         return None
 
 # account = athenticate_user('100001')
@@ -213,6 +214,90 @@ def get_menu_choice():
 # choice = get_menu_choice()
 # print('Your choice:', choice)
 
+# STEP 15 Main Menu Loop Functionality
+# Create atm_menu()
+def atm_menu(account_no):
+    while True:
+        show_main_menu()
+        choice = get_menu_choice()
+        if choice == '1':
+            account_type = select_account_type()
+            if not validate_account_type(account_no, account_type):
+                print('Invalid account type.')
+                continue
+            amount = select_withdraw_amount()
+
+            new_balance = withdraw_money(account_no, amount)
+            if new_balance is None:        
+                print('Withdraw failed.')
+            else:
+                save_transaction(account_no, 'withdraw', amount, new_balance)
+                dispense_cash(amount)
+                print(f"Withdraw successful.")
+                print(f"Your remaining balance: {new_balance:.2f}")
+                if ask_for_receipt():
+                    transaction = { 
+                        'account_no': account_no,
+                        'transaction_type': 'Withdraw',
+                        'amount': amount,
+                        'balance_after': new_balance,
+                        'created_at': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                    }
+                    print_receipt(transaction)
+
+        elif choice == '2':
+            balance = get_balance(account_no)
+            if balance is not None:
+                show_balance(balance)
+                
+                if ask_for_receipt():
+                    transaction = {
+                        'account_no': account_no,
+                        'transaction_type': 'Balance Inquiry',
+                        'amount': 0,
+                        'balance_after': balance,
+                        'created_at': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                    }
+                    print_receipt(transaction)
+            else:
+                print('Unable to get balance.')
+            
+        elif choice == '3':
+            receiver_account_no = get_receiver_account()
+            if verify_recevier(receiver_account_no):
+                print('Receiver verified.')
+    
+                amount = get_transfer_amount()
+                print(f"Transfer amount: {amount:.2f}")
+    
+                balance = get_balance(account_no)
+                if validate_transfer(balance, amount):
+                    result = transfer_money(
+                        account_no,
+                        receiver_account_no,
+                        amount
+                    )
+                    if result:
+                        print('Transfer successful.')
+                        if ask_for_receipt():
+                            transaction = {
+                                'account_no': account_no,
+                                'transaction_type': 'Transfer Sent',
+                                'amount': amount,
+                                'balance_after': get_balance(account_no),
+                                'created_at': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                            }
+                            print_receipt(transaction)
+                    else:
+                        print('Transfer failed.')
+                else:
+                    print('Insufficient balance.')
+            else:
+                print('Receiver account not found.')
+        elif choice == '4':
+            eject_card()
+            break
+
 # STEP 9 (Balance Inquiry) Start
 # Step 9.1 get balance function
 def get_balance(account_no):
@@ -248,6 +333,14 @@ def select_account_type():
 
 # account_type = select_account_type()
 # print('Selected account type:', account_type)
+
+# Create validate_account_type()
+def validate_account_type(account_no, selected_type):
+    account = get_account(account_no)
+    if account is None:
+        return False
+    actual_type = account[4]
+    return actual_type == selected_type
 
 # Step 10.2 select withdraw amount
 def select_withdraw_amount():
@@ -355,8 +448,8 @@ def save_transaction(account_no, transaction_type, amount, balance_after):
 
     return True
 
-result = save_transaction('100001', 'withdraw', 5000, 95000)
-print(result)
+# result = save_transaction('100001', 'withdraw', 5000, 95000)
+# print(result)
 
 # connection = sqlite3.connect('atm.db')
 # cursor = connection.cursor()
@@ -398,10 +491,13 @@ def print_receipt(transaction):
     print('\n=========== ATM RECEIPT ============')
     print(f"Account No: {transaction['account_no']}")
     print(f"Transaction Type: {transaction['transaction_type']}")
+
     if transaction['transaction_type'] == 'Withdraw':
         print(f"Withdraw Ammount: {transaction['amount']:.2f}")
     elif transaction['transaction_type'] == 'Transfer Sent':
         print(f"Transfer Ammount: {transaction['amount']:.2f}")
+    elif transaction['transaction_type'] == 'Balance Inquiry':
+        print(f"Available Blance: {transaction['balance_after']:.2f}")
     print(f"Balance Now: {transaction['balance_after']:.2f}")
     print(f"Date and Time: {transaction['created_at']}")
     print('===============================')
@@ -501,8 +597,11 @@ def get_transfer_amount():
 
 # # Main functionality start here
 account_no = insert_card()
+show_language_menu()
+language = select_language()
+messages = load_language(language)
 # call the athenticate_user function
-account = athenticate_user(account_no)
+account = athenticate_user(account_no, messages)
 if account is None:
     print('Athentication failed.')
 else:
@@ -510,68 +609,5 @@ else:
 
     show_main_menu()
     choice = get_menu_choice()
-    # withdraw functionality start here.
-    if choice == '1':
-        account_type = select_account_type()
-        amount = select_withdraw_amount()
-        new_balance = withdraw_money(account_no, amount)
-        if new_balance is None:
-            print('Withdraw failed.')
-        else:
-            save_transaction(account_no, 'withdraw', amount, new_balance)
-            dispense_cash(amount)
-            print(f"Withdraw successful.")
-            print(f"Your remaining balance: {new_balance:.2f}")
-            if ask_for_receipt():
-                transaction = { 'account_no': account_no,
-                                'transaction_type': 'Withdraw',
-                                'amount': amount,
-                                'balance_after': new_balance,
-                                'created_at': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-                }
-                print_receipt(transaction)
+    atm_menu(account_no)
 
-            eject_card()
-    # withdraw functionality end here.
-
-    elif choice == '2':
-        balance = get_balance(account_no)
-        if balance is not None:
-            show_balance(balance)
-        else:
-            print('Unable to get balance.')
-    elif choice == '3':
-        receiver_account_no = get_receiver_account()
-        if verify_recevier(receiver_account_no):
-            print('Receiver verified.')
-
-            amount = get_transfer_amount()
-            print(f"Transfer amount: {amount:.2f}")
-
-            balance = get_balance(account_no)
-            if validate_transfer(balance, amount):
-                result = transfer_money(
-                    account_no,
-                    receiver_account_no,
-                    amount
-                )
-                if result:
-                    print('Transfer successful.')
-                    if ask_for_receipt():
-                        transaction = {
-                            'account_no': account_no,
-                            'transaction_type': 'Transfer Sent',
-                            'amount': amount,
-                            'balance_after': get_balance(account_no),
-                            'created_at': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-                        }
-                        print_receipt(transaction)
-                else:
-                    print('Transfer failed.')
-            else:
-                print('Insufficient balance.')
-        else:
-            print('Receiver account not found.')
-    elif choice == '4':
-        print('Exit selected.')
-        eject_card()
