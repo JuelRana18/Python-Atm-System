@@ -167,24 +167,61 @@ def select_language():
 def load_language(language):
     if language == 'Bangla':
         return {
-            'welcome': 'ATM এ স্বাগতম',
+            'welcome': 'ATM এ স্বাগতম,{name}!', 
             'enter_pin': 'PIN দিন',
             'invalid_pin': 'ভুল PIN',
             'balance': 'আপনার ব্যালেন্স',
+            'account_not_found': 'একাউন্ট পাওয়া যায়নি',
+
+            'withdraw': 'টাকা উত্তোলন ',
+            'balance_inquiry':'ব্যালান্স দেখুন',
+            'transfer': 'ট্রান্সফার',
+            'exit': 'বের হয়ে যান',
+            'atm_menu': 'এটিএম মেনু',
+
+            'select_account_type': 'একাউন্টের  ধরণ নির্বাচন করুন',
+            'savings': 'সেভিংস',
+            'current': 'কারেন্ট',
+            'invalid_account_type': 'একাউন্ট টাইপ ভুল',
+            
         }
     elif language == 'English':
         return {
-            'welcome': 'Welcome to ATM',
+            'welcome': 'Welcome to ATM,{name}!',
             'enter_pin': 'Enter PIN',
             'invalid_pin': 'Invalid PIN',
             'balance': 'Your balance',
+            'account_not_found': 'Account not found.',
+
+            'withdraw': 'Withdraw ',
+            'balance_inquiry':'Balance Inquiry',
+            'transfer': 'Transfer',
+            'exit': 'Exit',
+            'atm_menu': 'ATM MENU',
+
+            'select_account_type': 'Select Account Type',
+            'savings': 'Savings',
+            'current': 'Current',
+            'invalid_account_type': 'Invalid Account Type',
         }
     elif language == 'Malay':
         return {
-            'welcome': 'Salamat datang ke ATM',
+            'welcome': 'Salamat datang ke ATM,{name}!',
             'enter_pin': 'Masukkan PIN',
             'invalid_pin': 'PIN tidak sah',
             'balance': 'Baki anda',
+            'account_not_found': 'Akaun tidak de jumpai',
+
+            'withdraw': 'Pengeluaran',
+            'balance_inquiry':'Semakan Baki',
+            'transfer': 'Pemindahan',
+            'exit': 'Keluar',
+            'atm_menu': 'MENU ATM',
+
+            'select_account_type': 'Pilih Jenis Akaun',
+            'savings': 'Simpanan',
+            'current': 'Semasa',
+            'invalid_account_type': 'Jenis akaun Tidah Sah',
         }
     else:
         return None
@@ -195,12 +232,13 @@ def load_language(language):
 # print(language['balance'])
 
 # STEP 8.1 --show_main_menu()
-def show_main_menu():
-    print('\n===== ATM MENU =====')
-    print('1. Withdraw')
-    print('2. Balance Inquiry')
-    print('3. Transfer')
-    print('4. Exit')
+def show_main_menu(messages):
+    print(f'\n===== {messages['atm_menu']} =====')
+    print(f'1.{messages['withdraw']}')
+    print(f'2.{messages['balance_inquiry']}')
+    print(f'3.{messages['transfer']}')
+    print(f'4.{messages['exit']}')
+    
 
 # get menu choice by user
 def get_menu_choice():
@@ -216,14 +254,14 @@ def get_menu_choice():
 
 # STEP 15 Main Menu Loop Functionality
 # Create atm_menu()
-def atm_menu(account_no):
+def atm_menu(account_no, messages):
     while True:
-        show_main_menu()
+        show_main_menu(messages)
         choice = get_menu_choice()
         if choice == '1':
-            account_type = select_account_type()
+            account_type = select_account_type(messages)
             if not validate_account_type(account_no, account_type):
-                print('Invalid account type.')
+                print(messages['invalid_account_type'])
                 continue
             amount = select_withdraw_amount()
 
@@ -318,11 +356,12 @@ def show_balance(balance):
 
 # STEP 10(Withdraw system) strat
 # Step 10.1 select account type
-def select_account_type():
+def select_account_type(messages):
     while True:
-        print('\n===== SELECT ACCOUNT TYPE =====')
-        print('1. Savings')
-        print('2. Current')
+        print(f'\n===== {messages['select_account_type']} =====')
+        print(f'1.{messages['savings']}')
+        print(f'2.{messages['current']}')
+        
         choice = input('Select account type: ')
         if choice == '1':
             return 'Savings'
@@ -597,17 +636,21 @@ def get_transfer_amount():
 
 # # Main functionality start here
 account_no = insert_card()
-show_language_menu()
-language = select_language()
-messages = load_language(language)
-# call the athenticate_user function
-account = athenticate_user(account_no, messages)
+account = get_account(account_no)
 if account is None:
-    print('Athentication failed.')
+    print('Account not found.')
 else:
-    print(f'Welcome,{account[2]}!')
+    show_language_menu()
+    language = select_language()
+    messages = load_language(language)
+    # call the athenticate_user function
+    account = athenticate_user(account_no, messages)
+    if account is None:
+        print('Athentication failed.')
+    else:
+        print(messages['welcome'].format(name=account[2]))
 
-    show_main_menu()
-    choice = get_menu_choice()
-    atm_menu(account_no)
+        # show_main_menu()
+        # choice = get_menu_choice()
+        atm_menu(account_no, messages)
 
