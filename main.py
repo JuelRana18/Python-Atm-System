@@ -130,6 +130,7 @@ def athenticate_user(account_no, messages):
     # call get_account() for filter account_no
     account = get_account(account_no)
     if account is None:
+        print(messages['account_not_found'])
         return None
     entered_pin = input(messages['enter_pin'])
     if verify_pin(account_no, entered_pin):
@@ -167,61 +168,276 @@ def select_language():
 def load_language(language):
     if language == 'Bangla':
         return {
+            # # insert card
+            # 'insert_card_title': 'কার্ড প্রবেশ করান',
+            # 'enter_account_no': 'একাউন্ট নম্বর দিন: ',
+
+            # account
+            'athentication_failed': 'অনুমোদন ব্যর্থ হয়েছে।',
             'welcome': 'ATM এ স্বাগতম,{name}!', 
-            'enter_pin': 'PIN দিন',
+            'enter_pin': 'PIN দিন: ',
             'invalid_pin': 'ভুল PIN',
             'balance': 'আপনার ব্যালেন্স',
-            'account_not_found': 'একাউন্ট পাওয়া যায়নি',
+            'account_not_found':'একাউন্ট পাওয়া যায়নি',
 
-            'withdraw': 'টাকা উত্তোলন ',
+            # get menu choice
+            'select_option': 'একটি অপশন নির্বাচন করুন: ',
+            'invalid_menu_choice': 'ভুল নির্বাচন। ১-৪এর মধ্যে নির্বাচন করুন।',
+
+            # show main menu
+            'withdraw': 'টাকা উত্তোলন',
             'balance_inquiry':'ব্যালান্স দেখুন',
             'transfer': 'ট্রান্সফার',
             'exit': 'বের হয়ে যান',
-            'atm_menu': 'এটিএম মেনু',
+            'atm_menu': 'ATM মেনু',
 
-            'select_account_type': 'একাউন্টের  ধরণ নির্বাচন করুন',
+            # select account type
+            'select_account_type': 'একাউন্টের ধরণ নির্বাচন করুন: ',
             'savings': 'সেভিংস',
             'current': 'কারেন্ট',
-            'invalid_account_type': 'একাউন্ট টাইপ ভুল',
+            'invalid_account_type': 'একাউন্ট টাইপ ভুল, ১ অথবা ২ টাইপ করুন। ',
+
+            # amount selection withdraw
+            'withdraw_amount': 'উত্তোলনের পরিমাণ নির্বাচন করুন',
+            'other': 'অন্যান্য',
+            'enter_amount': 'টাকার পরিমাণ লিখুন: ',
+            'invalid_choice': 'ভুল নির্বাচন।অনুগ্রহ করে ১-৫এর মধ্যে নির্বাচন করুন।',
+            'amount_positive': 'টাকার পরিমাণ শূন্যের বেশি হতে হবে।',
+            'valid_number': 'অনুগ্রহ করে একটি সঠিক সংখ্যা লিখুন।',
+            'amount': 'টাকার পরিমাণ',
+            'processing': 'প্রক্রিয়া চলছে ....',
+
+            # validation and successful withdraw
+            'insufficient_balance': 'পর্যাপ্ত  ব্যালান্স নেই।',
+            'withdraw_successful': 'টাকা উত্তোলন সফল হয়েছে।',
+            'witjdraw_failed': 'টাকা উত্তোলন সফল হয়নি ',
+            'cash_processing': 'টাকা প্রক্রিয়াকরণ চলছে ...',
+
+            # dispensing
+            'dispensing': 'টাকা দেওয়া হচ্ছে: {amount:.2f}...',
+            'take_cash': 'অনুগ্রহ করে টাকা নিন।',
+
+            # balance inquiry
+            'balance_title': 'ব্যালেন্স অনুসন্ধান',
+            'your_balance': 'আপনার ব্যালেন্স: {balance:.2f}',
+            'balance_not_available': 'আপনার ব্যালেন্স পাওয়া যায়নি।',
+
+            # ask for receipt
+            'receipt_prompt': 'আপনি কি রশিদ চান ? (y/n): ',
+            'invalid_yes_no': 'ভুল নির্বাচন। y অথবা n দিন।',
+
+            # transfer
+            'transfer_amount_display': 'ট্রান্সফারের পরিমাণ: {amount:.2f}',
+            'receiver_account': 'প্রাপকের একাউন্ট নম্বর দিন: ',
+            'receiver_verified': 'প্রাপক যাচাই সফল হয়েছে।',
+            'transfer_amount': 'ট্রান্সফারের পরিমান লিখুন: ',
+            'transfer_successful': 'ট্রান্সফার সফল হয়েছে।',
+
+            # transfer erorr
+            'receiver_not_found': 'প্রাপকের একাউন্ট পাওয়া যায়নি।',
+            'transfer_failed': 'ট্রান্সফার ব্যর্থ হয়েছে।',
+            'transfer_insufficient': 'ট্রান্সফারের জন্য পর্যাপ্ত ব্যালেন্স নেই।',
+            'transfer_amount_positive': 'ট্রান্সফারের পরিমাণ শূন্যের চেয়ে বেশি হতে হবে।',
+            'transfer_valid_number': 'সঠিক সংখ্যা লিখুন।',
+
+            # receipt
+            'receipt_title': 'ATM রশিদ',
+            'account_no': 'একাউন্ট নম্বর',
+            'transaction_type': 'লেনদেনের ধরণ',
+            'withdraw_amount_label': 'উত্তোলনের পরিমাণ',
+            'transfer_amount_label': 'ট্রান্সফারের পরিমাণ',
+            'available_balance': 'পর্যাপ্ত ব্যালেন্স',
+            'balance_now': 'বর্তমান ব্যালেন্স',
+            'date_time': 'তারিখ ও সময়',
+
+            # Exit and card eject
+            'exit_selected': 'বের হওয়া নির্বাচিত করা হয়েছে।',
+            'take_card': 'অনুগ্রহ করে আপনার কার্ডটি নিন।',
+            'card_ejected': 'সফলভাবে কার্ড বের করা হয়েছে।',
             
         }
     elif language == 'English':
         return {
+            # # insert card
+            # 'insert_card_title': 'INSERT CARD',
+            # 'enter_account_no': 'Enter account number: ',
+
+            # account
+            'athentication_failed': 'Athentication failed.',
+            'account_not_found': 'Account not found.',
+
             'welcome': 'Welcome to ATM,{name}!',
-            'enter_pin': 'Enter PIN',
+            'enter_pin': 'Enter PIN: ',
             'invalid_pin': 'Invalid PIN',
             'balance': 'Your balance',
             'account_not_found': 'Account not found.',
 
+            # get menu choice
+            'select_option': 'Select an option: ',
+            'invalid_menu_choice': 'Invalid choice. Please select 1-4.',
+
+            # show main menu
             'withdraw': 'Withdraw ',
             'balance_inquiry':'Balance Inquiry',
             'transfer': 'Transfer',
             'exit': 'Exit',
             'atm_menu': 'ATM MENU',
 
-            'select_account_type': 'Select Account Type',
+            # select account type
+            'select_account_type': 'Select Account Type: ',
             'savings': 'Savings',
             'current': 'Current',
-            'invalid_account_type': 'Invalid Account Type',
+            'invalid_account_type': 'Invalid Account Type, type 1 or 2.',
+
+            # amount selection
+            'withdraw_amount': 'Select Withdraw Amount',
+            'other': 'Other',
+            'enter_amount': 'Enter Amount: ',
+            'invalid_choice': 'Invalid Choice. Please Select 1-5.',
+            'amount_positive' : 'Amount Must Be Greater Than 0.',
+            'valid_number': 'Please Enter A Valid Number.',
+            'amount': 'Ammount',
+            'processing': 'Processing ...',
+
+            # validation and successful withdraw
+            'insufficient_balance': 'Insufficient balance.',
+            'withdraw_successful': 'Withdraw successful.',
+            'withdraw_failed': 'Withdrae failed.',
+            'cash_processing': 'Processing cash ...',
+
+            # dispensing
+            'dispensing': 'Dispensing: {amount:.2f}...',
+            'take_cash': 'Please take your cash.',
+
+            # balance inquiry
+            'balance_title': 'BALANCE INQUIRY',
+            'your_balance': 'Your balance: {balance:.2f}',
+            'balance_not_available': 'Your balance not available.',
+
+            # ask for receipt
+            'receipt_prompt': 'Do you want a receipt ? (y/n): ',
+            'invalid_yes_no': 'Invalid choice. Please enter y or n.',
+
+            # transfer
+            'transfer_amount_display': 'Transfer amount: {amount:.2f}',
+            'receiver_account': 'Enter receiver account number: ',
+            'receiver_verified': 'Receiver verified.',
+            'transfer_amount': 'Enter transfer amount: ',
+            'transfer_successful': 'Transfer successful.',
+
+            # transfer erorr
+            'receiver_not_found': 'Receiver account not found.',
+            'transfer_failed': 'Transfer failed.',
+            'transfer_insufficient': 'Insufficient balance for transfer.',
+            'transfer_amount_positive': 'Amount must be greater than 0.',
+            'transfer_valid_number': 'Please enter a valid number.',
+
+            # receipt
+            'receipt_title': 'ATM RECEIPT',
+            'account_no': 'Account No',
+            'transaction_type': 'Transaction Type',
+            'withdraw_amount_label': 'Withdraw Amount',
+            'transfer_amount_label': 'Transfer Amount',
+            'available_balance': 'Available Balance',
+            'balance_now': 'Balance Now',
+            'date_time': 'Date & Time', 
+
+            # Exit and card eject
+            'exit_selected': 'Exit selected.',
+            'take_card': 'Please take your card.',
+            'card_ejected': 'Card ejected successfully.',
+            
         }
     elif language == 'Malay':
         return {
+            # # insert card
+            # 'insert_card_title': 'MASUKKAN KAD',
+            # 'enter_account_no': 'Masukkan nombor akaun: ',
+
+            # account
+            'athentication_failed': 'Pengesehan gagal',
+            'account_not_found': 'Akaun tida di jumpai',
+
             'welcome': 'Salamat datang ke ATM,{name}!',
-            'enter_pin': 'Masukkan PIN',
+            'enter_pin': 'Masukkan PIN: ',
             'invalid_pin': 'PIN tidak sah',
             'balance': 'Baki anda',
             'account_not_found': 'Akaun tidak de jumpai',
 
+            # get menu choice
+            'select_option': 'Pilih satu pilihan.',
+            'invalid_menu_choice': 'Pilihan tidak sah. Sila pilih 1-4.',
+
+            # show main menu
             'withdraw': 'Pengeluaran',
             'balance_inquiry':'Semakan Baki',
             'transfer': 'Pemindahan',
             'exit': 'Keluar',
             'atm_menu': 'MENU ATM',
 
-            'select_account_type': 'Pilih Jenis Akaun',
+            # select account type
+            'select_account_type': 'Pilih Jenis Akaun: ',
             'savings': 'Simpanan',
             'current': 'Semasa',
-            'invalid_account_type': 'Jenis akaun Tidah Sah',
+            'invalid_account_type': 'Jenis akaun Tidak Sah, jenis 1 atau 2.',
+
+            # amount selection
+            'withdraw_amount': 'Pilih Jumla Pengeluaran.',
+            'other': 'Lain-lain.',
+            'enter_amount': 'Masukan Jumlah: ',
+            'invalid_choice': 'Pilihan Tidak Sah. Sila Pilih 1-5.',
+            'amount_positive': 'Jumlah Mestilah Lebih Daripada 0.',
+            'valid_number': 'Sila Masukkan Nombor Yang Sah.',
+            'amount': 'Jumlah',
+            'processing': 'Sedang diproses ...',
+
+            # validation and successful withdraw
+            'insufficient_balance': 'Baki tidak mencukupi.',
+            'withdraw_successful': 'Pengeluaran berjaya',
+            'withdraw_failed': 'Pengeluaran tidak berjaya',
+            'cash_processing': 'Tunai sedang diproses ...',
+
+            # dispensing
+            'dispensing': 'Mengeluarkan: {amount:.2f}...',
+            'take_cash': 'Sila ambilwang tunai anda.',
+
+            # balance inquiry
+            'balance_title': 'SEMAKAN BAKI',
+            'your_balance': 'Baki anda: {balance:.2f}',
+            'balance_not_available': 'Baki anda tidak ditemui.',
+
+            # ask for receipt
+            'receipt_prompt': 'Adakan anda mahu resit ? (y/n): ',
+            'invalid_yes_no': 'Pilihan tidak sah. Sila masukkan y atau n.',
+
+            # transfer
+            'transfer_amount_display': 'Jumlah pemindahan: {amount:.2f}',
+            'receiver_account': 'Masukkan nombor akaun penerima: ',
+            'receiver_verified': 'Penerima telah disahkan.',
+            'transfer_amount': 'Masukkan jumlah pemindahan: ',
+            'transfer_successful': 'Pimindahan barjaya.',
+
+            # transfer erorr
+            'receiver_not_found': 'Akaun penerima tidak sah dijumpai.',
+            'transfer_failed': 'Pemindahan gagal.',
+            'transfer_insufficient': 'Baki tidak mencukupi untuk pemindahan',
+            'transfer_amount_positive': 'Jumlah mestilah lebih daripada 0.',
+            'transfer_valid_number': 'Sila masukkan nomboryang sah.',
+
+            # receipt
+            'receipt_title': 'RESIT ATM',
+            'account_no': 'Akaon Nombor',
+            'transaction_type': 'Jenis Transaksi',
+            'withdraw_amount_label': 'Jumlah Pengeluaran',
+            'transfer_amount_label': 'Jumlah Pemindahan',
+            'available_balance': 'Baki Tersedia',
+            'balance_now': 'Baki Semesa',
+            'date_time': 'Tarikh dan masa',
+
+            # Exit and card eject
+            'exit_selected': 'Keluar dipilih.',
+            'take_card': 'Sila ambil kad anda.',
+            'card_ejected': 'Kad berjaya dikeluarkan.'
         }
     else:
         return None
@@ -241,12 +457,12 @@ def show_main_menu(messages):
     
 
 # get menu choice by user
-def get_menu_choice():
+def get_menu_choice(messages):
     while True:
-        choice = input('Select an option: ')
+        choice = input(messages['select_option'])
         if choice in ['1', '2', '3', '4',]:
             return choice
-        print('Invalid choice. Please select 1-4.')
+        print(messages['invalid_menu_choice'])
 
 # show_main_menu()
 # choice = get_menu_choice()
@@ -257,23 +473,23 @@ def get_menu_choice():
 def atm_menu(account_no, messages):
     while True:
         show_main_menu(messages)
-        choice = get_menu_choice()
+        choice = get_menu_choice(messages)
         if choice == '1':
             account_type = select_account_type(messages)
             if not validate_account_type(account_no, account_type):
                 print(messages['invalid_account_type'])
                 continue
-            amount = select_withdraw_amount()
+            amount = select_withdraw_amount(messages)
 
             new_balance = withdraw_money(account_no, amount)
             if new_balance is None:        
-                print('Withdraw failed.')
+                print(messages['withdraw_failed'])
             else:
                 save_transaction(account_no, 'withdraw', amount, new_balance)
-                dispense_cash(amount)
-                print(f"Withdraw successful.")
-                print(f"Your remaining balance: {new_balance:.2f}")
-                if ask_for_receipt():
+                dispense_cash(amount, messages)
+                print(messages['withdraw_successful'])
+                print(f"{messages['balance_now']}: {new_balance:.2f}")
+                if ask_for_receipt(messages):
                     transaction = { 
                         'account_no': account_no,
                         'transaction_type': 'Withdraw',
@@ -281,14 +497,14 @@ def atm_menu(account_no, messages):
                         'balance_after': new_balance,
                         'created_at': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
                     }
-                    print_receipt(transaction)
+                    print_receipt(transaction, messages)
 
         elif choice == '2':
             balance = get_balance(account_no)
             if balance is not None:
-                show_balance(balance)
+                show_balance(balance, messages)
                 
-                if ask_for_receipt():
+                if ask_for_receipt(messages):
                     transaction = {
                         'account_no': account_no,
                         'transaction_type': 'Balance Inquiry',
@@ -296,17 +512,17 @@ def atm_menu(account_no, messages):
                         'balance_after': balance,
                         'created_at': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
                     }
-                    print_receipt(transaction)
+                    print_receipt(transaction, messages)
             else:
-                print('Unable to get balance.')
+                print(messages['balance_not_available'])
             
         elif choice == '3':
-            receiver_account_no = get_receiver_account()
+            receiver_account_no = get_receiver_account(messages)
             if verify_recevier(receiver_account_no):
-                print('Receiver verified.')
+                print(messages['receiver_verified'])
     
-                amount = get_transfer_amount()
-                print(f"Transfer amount: {amount:.2f}")
+                amount = get_transfer_amount(messages)
+                print(messages['transfer_amount_display'].format(amount=amount))
     
                 balance = get_balance(account_no)
                 if validate_transfer(balance, amount):
@@ -316,8 +532,8 @@ def atm_menu(account_no, messages):
                         amount
                     )
                     if result:
-                        print('Transfer successful.')
-                        if ask_for_receipt():
+                        print(messages['transfer_successful'])
+                        if ask_for_receipt(messages):
                             transaction = {
                                 'account_no': account_no,
                                 'transaction_type': 'Transfer Sent',
@@ -325,15 +541,16 @@ def atm_menu(account_no, messages):
                                 'balance_after': get_balance(account_no),
                                 'created_at': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
                             }
-                            print_receipt(transaction)
+                            print_receipt(transaction, messages)
                     else:
-                        print('Transfer failed.')
+                        print(messages['transfer_failed'])
                 else:
-                    print('Insufficient balance.')
+                    print(messages['insufficient_balance'])
             else:
-                print('Receiver account not found.')
+                print(messages['receiver_not_found'])
         elif choice == '4':
-            eject_card()
+            print(messages['exit_selected'])
+            eject_card(messages)
             break
 
 # STEP 9 (Balance Inquiry) Start
@@ -347,9 +564,9 @@ def get_balance(account_no):
     return balance
 
 # Step 9.2 show balance function
-def show_balance(balance):
-    print('\n===== Balance Inquiry =====')
-    print(f"Your Balance: {balance:.2f}")
+def show_balance(balance, messages):
+    print(f'\n====== {messages['balance_title']} ======')
+    print(messages['your_balance'].format(balance=balance))
 
 # balance = get_balance('100001')
 # show_balance(balance)
@@ -362,13 +579,13 @@ def select_account_type(messages):
         print(f'1.{messages['savings']}')
         print(f'2.{messages['current']}')
         
-        choice = input('Select account type: ')
+        choice = input(messages['select_account_type'])
         if choice == '1':
             return 'Savings'
         elif choice == '2':
             return 'Current'
         else:
-            print('Invalid choice. Please select 1 or 2.')
+            print(messages['invalid_account_type'])
 
 # account_type = select_account_type()
 # print('Selected account type:', account_type)
@@ -382,9 +599,9 @@ def validate_account_type(account_no, selected_type):
     return actual_type == selected_type
 
 # Step 10.2 select withdraw amount
-def select_withdraw_amount():
+def select_withdraw_amount(messages):
     while True:
-        print('\n===== WITHDRAW AMOUNT =====')
+        print(f'\n======= {messages['withdraw_amount']} =======')
         print('1. 500')
         print('2. 1000')
         print('3. 2000')
@@ -401,14 +618,14 @@ def select_withdraw_amount():
             return 5000
         elif choice == '5':
             try:
-                amount = float(input('Enter your amount: '))
+                amount = float(input(messages['enter_amount']))
                 if amount > 0:
                     return amount
-                print('Amount must be greater than 0.')
+                print(messages['amount_positive'])
             except ValueError:
-                print('Please enter a valid number.')
+                print(messages['valid_number'])
         else:
-            print('Invalid choice. Please select 1-5.')
+            print(messages['invalid_choice'])
 
 # amount = select_withdraw_amount()
 # print('Your selected amount: ', amount)
@@ -500,10 +717,10 @@ def save_transaction(account_no, transaction_type, amount, balance_after):
 # connection.close()
 
 # Step 10.7 Create dispense cash function
-def dispense_cash(amount):
-    print('\nProcessing cash...')
-    print(f"Dispensing {amount:.2f}...")
-    print('Please take your cash.')
+def dispense_cash(amount, messages):
+    print(f'\n{messages['cash_processing']}')
+    print(messages['dispensing'].format(amount=amount))
+    print(messages['take_cash'])
     return True
 
 # result = dispense_cash(5000)
@@ -511,34 +728,34 @@ def dispense_cash(amount):
 
 # STEP 11 RECEIPT FUNCTIONALITY
 # step 11.1 create ask for receipt function
-def ask_for_receipt():
+def ask_for_receipt(messages):
     while True:
-        choice = input('\nDo you want a receipt? (y/n): ').lower()
+        choice = input(f'\n{messages['receipt_prompt']}').lower()
 
         if choice == 'y':
             return True
         elif choice == 'n':
             return False
         else:
-            print('Invalid choice. Please enter y or n.')
+            print(messages['invalid_yes_no'])
 
 # receipt = ask_for_receipt()
 # print('Receipt Requested:', receipt)
 
 # Step 11.2 create print receipt function
-def print_receipt(transaction):
-    print('\n=========== ATM RECEIPT ============')
-    print(f"Account No: {transaction['account_no']}")
-    print(f"Transaction Type: {transaction['transaction_type']}")
+def print_receipt(transaction, messages):
+    print(f'\n====== {messages['receipt_title']} ======')
+    print(f"{messages['account_no']}: {transaction['account_no']}")
+    print(f"{messages['transaction_type']}: {transaction['transaction_type']}")
 
     if transaction['transaction_type'] == 'Withdraw':
-        print(f"Withdraw Ammount: {transaction['amount']:.2f}")
+        print(f"{messages['withdraw_amount_label']}: {transaction['amount']:.2f}")
     elif transaction['transaction_type'] == 'Transfer Sent':
-        print(f"Transfer Ammount: {transaction['amount']:.2f}")
+        print(f"{messages['transfer_amount_label']}: {transaction['amount']:.2f}")
     elif transaction['transaction_type'] == 'Balance Inquiry':
-        print(f"Available Blance: {transaction['balance_after']:.2f}")
-    print(f"Balance Now: {transaction['balance_after']:.2f}")
-    print(f"Date and Time: {transaction['created_at']}")
+        print(f"{messages['available_balance']}: {transaction['balance_after']:.2f}")
+    print(f"{messages['balance_now']}: {transaction['balance_after']:.2f}")
+    print(f"{messages['date_time']}: {transaction['created_at']}")
     print('===============================')
 
 # transaction = {
@@ -552,23 +769,23 @@ def print_receipt(transaction):
 
 # STEP 12(Eject Card)
 # create eject card function
-def eject_card():
-    print('\nPlease take ypur card.')
-    print('Card ejected successfully.')
+def eject_card(messages):
+    print(f'\n{messages['take_card']}')
+    print(messages['card_ejected'])
 # eject_card()
 
 # Complete ATM Flow Start Here
 # Step 13.1 creat insert card function
 def insert_card():
-    print('\n====== INSERT CARD ======')
-    account_no = input('Enter account number: ')
+    print(f'\n====== INSERT CARD ======')
+    account_no = input('Enter Account Number: ')
     return account_no
 
 
 # STEP 14 Transfer functonality start
 # Step 14.1 create get receiver account number function
-def get_receiver_account():
-    receiver_account_no = input('Enter receiver account number: ')
+def get_receiver_account(messages):
+    receiver_account_no = input(messages['receiver_account'])
     return receiver_account_no
 # receiver = get_receiver_account()
 # print('Receiver no:', receiver)
@@ -622,16 +839,16 @@ def transfer_money(sender_account_no, receiver_account_no, amount):
 
 # STEP 15 TRANSFER AMOUNT FUNCTIONALITY
 # create get_transfer_amount()
-def get_transfer_amount():
+def get_transfer_amount(messages):
     while True:
         try:
-            amount = float(input('Enter transfer amount: '))
+            amount = float(input(messages['transfer_amount']))
             if amount <= 0:
-                print('Amount must be greater than 0.')
+                print(messages['transfer_positive'])
                 continue
             return amount
         except ValueError:
-            print('Please enter a valid number.')
+            print(messages['transfer_valid_number'])
         
 
 # # Main functionality start here
@@ -646,7 +863,7 @@ else:
     # call the athenticate_user function
     account = athenticate_user(account_no, messages)
     if account is None:
-        print('Athentication failed.')
+        print(messages['athentication_failed'])
     else:
         print(messages['welcome'].format(name=account[2]))
 
