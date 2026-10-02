@@ -234,6 +234,7 @@ def load_language(language):
             'transfer_successful': 'ট্রান্সফার সফল হয়েছে।',
 
             # transfer erorr
+            'self_transfer_not_allowed': 'নিজের একাউন্টে টাকা ট্রান্সফার করা যাবে না।',
             'receiver_not_found': 'প্রাপকের একাউন্ট পাওয়া যায়নি।',
             'transfer_failed': 'ট্রান্সফার ব্যর্থ হয়েছে।',
             'transfer_insufficient': 'ট্রান্সফারের জন্য পর্যাপ্ত ব্যালেন্স নেই।',
@@ -326,6 +327,7 @@ def load_language(language):
             'transfer_successful': 'Transfer successful.',
 
             # transfer erorr
+            'self_transfer_not_allowed': 'You can not transfer money to your own account.',
             'receiver_not_found': 'Receiver account not found.',
             'transfer_failed': 'Transfer failed.',
             'transfer_insufficient': 'Insufficient balance for transfer.',
@@ -356,7 +358,6 @@ def load_language(language):
 
             # account
             'athentication_failed': 'Pengesehan gagal',
-            'account_not_found': 'Akaun tida di jumpai',
 
             'welcome': 'Salamat datang ke ATM,{name}!',
             'enter_pin': 'Masukkan PIN: ',
@@ -365,7 +366,7 @@ def load_language(language):
             'account_not_found': 'Akaun tidak de jumpai',
 
             # get menu choice
-            'select_option': 'Pilih satu pilihan.',
+            'select_option': 'Pilih satu pilihan: ',
             'invalid_menu_choice': 'Pilihan tidak sah. Sila pilih 1-4.',
 
             # show main menu
@@ -418,6 +419,7 @@ def load_language(language):
             'transfer_successful': 'Pimindahan barjaya.',
 
             # transfer erorr
+            'self_transfer_not_allowed': 'Anda tidak boleh memidahkan wang ke akaun sendiri.',
             'receiver_not_found': 'Akaun penerima tidak sah dijumpai.',
             'transfer_failed': 'Pemindahan gagal.',
             'transfer_insufficient': 'Baki tidak mencukupi untuk pemindahan',
@@ -518,7 +520,9 @@ def atm_menu(account_no, messages):
             
         elif choice == '3':
             receiver_account_no = get_receiver_account(messages)
-            if verify_recevier(receiver_account_no):
+            if  account_no == receiver_account_no:
+                print(messages['self_transfer_not_allowed'])
+            elif verify_recevier(account_no, receiver_account_no):
                 print(messages['receiver_verified'])
     
                 amount = get_transfer_amount(messages)
@@ -791,8 +795,10 @@ def get_receiver_account(messages):
 # print('Receiver no:', receiver)
 
 # Step 14.2 creat verify_recevier()
-def verify_recevier(account_no):
-    account = get_account(account_no) # fetch account_no from get_account
+def verify_recevier(sender_account_no, receiver_account_no):
+    if sender_account_no == receiver_account_no:
+        return False
+    account = get_account(receiver_account_no) # fetch account_no from get_account
     if account is None:
         return False
     return True
@@ -844,7 +850,7 @@ def get_transfer_amount(messages):
         try:
             amount = float(input(messages['transfer_amount']))
             if amount <= 0:
-                print(messages['transfer_positive'])
+                print(messages['transfer_amount_positive'])
                 continue
             return amount
         except ValueError:
