@@ -1,0 +1,9 @@
+# SQLight database
+atm.db
+# Python cache
+__pycache__/
+*.pyc
+
+# Virtual envirronment
+venv/
+.venv/

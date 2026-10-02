@@ -103,9 +103,6 @@ def get_account(account_no):
     connection.close()
     return account
 
-# # function call will be outside from main function
-# account = get_account('100001')
-# print(account)
 
 # STEP 5
 # verify pin when user entered the pin
@@ -121,12 +118,9 @@ def verify_pin(account_no, entered_pin):
     else:
         return False
 
-# result = verify_pin('100001', '1234')
-# print(result)
-
 # STEP 6
 # Athenticate_user function
-def athenticate_user(account_no, messages):
+def authenticate_user(account_no, messages):
     # call get_account() for filter account_no
     account = get_account(account_no)
     if account is None:
@@ -139,8 +133,6 @@ def athenticate_user(account_no, messages):
         print(messages['invalid_pin'])
         return None
 
-# account = athenticate_user('100001')
-# print(account)
 
 # STEP 7
 # show language menu function
@@ -161,19 +153,12 @@ def select_language():
         else:
             print('Invalid choice. Please select 1, 2, or 3.')
 
-# show_language_menu()
-# language = select_language()
-# print('Select language:', language)
 
 def load_language(language):
     if language == 'Bangla':
         return {
-            # # insert card
-            # 'insert_card_title': 'কার্ড প্রবেশ করান',
-            # 'enter_account_no': 'একাউন্ট নম্বর দিন: ',
-
             # account
-            'athentication_failed': 'অনুমোদন ব্যর্থ হয়েছে।',
+            'authentication_failed': 'অনুমোদন ব্যর্থ হয়েছে।',
             'welcome': 'ATM এ স্বাগতম,{name}!', 
             'enter_pin': 'PIN দিন: ',
             'invalid_pin': 'ভুল PIN',
@@ -210,7 +195,7 @@ def load_language(language):
             # validation and successful withdraw
             'insufficient_balance': 'পর্যাপ্ত  ব্যালান্স নেই।',
             'withdraw_successful': 'টাকা উত্তোলন সফল হয়েছে।',
-            'witjdraw_failed': 'টাকা উত্তোলন সফল হয়নি ',
+            'withdraw_failed': 'টাকা উত্তোলন সফল হয়নি ',
             'cash_processing': 'টাকা প্রক্রিয়াকরণ চলছে ...',
 
             # dispensing
@@ -259,14 +244,8 @@ def load_language(language):
         }
     elif language == 'English':
         return {
-            # # insert card
-            # 'insert_card_title': 'INSERT CARD',
-            # 'enter_account_no': 'Enter account number: ',
-
             # account
-            'athentication_failed': 'Athentication failed.',
-            'account_not_found': 'Account not found.',
-
+            'authentication_failed': 'Authentication failed.',
             'welcome': 'Welcome to ATM,{name}!',
             'enter_pin': 'Enter PIN: ',
             'invalid_pin': 'Invalid PIN',
@@ -297,13 +276,13 @@ def load_language(language):
             'invalid_choice': 'Invalid Choice. Please Select 1-5.',
             'amount_positive' : 'Amount Must Be Greater Than 0.',
             'valid_number': 'Please Enter A Valid Number.',
-            'amount': 'Ammount',
+            'amount': 'Amount',
             'processing': 'Processing ...',
 
             # validation and successful withdraw
             'insufficient_balance': 'Insufficient balance.',
             'withdraw_successful': 'Withdraw successful.',
-            'withdraw_failed': 'Withdrae failed.',
+            'withdraw_failed': 'Withdraw failed.',
             'cash_processing': 'Processing cash ...',
 
             # dispensing
@@ -352,12 +331,9 @@ def load_language(language):
         }
     elif language == 'Malay':
         return {
-            # # insert card
-            # 'insert_card_title': 'MASUKKAN KAD',
-            # 'enter_account_no': 'Masukkan nombor akaun: ',
 
             # account
-            'athentication_failed': 'Pengesehan gagal',
+            'authentication_failed': 'Pengesehan gagal',
 
             'welcome': 'Salamat datang ke ATM,{name}!',
             'enter_pin': 'Masukkan PIN: ',
@@ -444,11 +420,6 @@ def load_language(language):
     else:
         return None
 
-# language = load_language('Malay')
-# print(language['welcome'])
-# print(language['enter_pin'])
-# print(language['balance'])
-
 # STEP 8.1 --show_main_menu()
 def show_main_menu(messages):
     print(f'\n===== {messages['atm_menu']} =====')
@@ -466,9 +437,6 @@ def get_menu_choice(messages):
             return choice
         print(messages['invalid_menu_choice'])
 
-# show_main_menu()
-# choice = get_menu_choice()
-# print('Your choice:', choice)
 
 # STEP 15 Main Menu Loop Functionality
 # Create atm_menu()
@@ -522,7 +490,7 @@ def atm_menu(account_no, messages):
             receiver_account_no = get_receiver_account(messages)
             if  account_no == receiver_account_no:
                 print(messages['self_transfer_not_allowed'])
-            elif verify_recevier(account_no, receiver_account_no):
+            elif verify_receiver(account_no, receiver_account_no):
                 print(messages['receiver_verified'])
     
                 amount = get_transfer_amount(messages)
@@ -572,8 +540,6 @@ def show_balance(balance, messages):
     print(f'\n====== {messages['balance_title']} ======')
     print(messages['your_balance'].format(balance=balance))
 
-# balance = get_balance('100001')
-# show_balance(balance)
 
 # STEP 10(Withdraw system) strat
 # Step 10.1 select account type
@@ -631,8 +597,6 @@ def select_withdraw_amount(messages):
         else:
             print(messages['invalid_choice'])
 
-# amount = select_withdraw_amount()
-# print('Your selected amount: ', amount)
 
 # Step 10.3 validate withdraw function
 def validate_withdrawal(balance, amount):
@@ -641,10 +605,6 @@ def validate_withdrawal(balance, amount):
     if amount > balance:
         return False
     return True
-
-# print(validate_withdrawal(100000, 5000))
-# print(validate_withdrawal(100000, 150000))
-# print(validate_withdrawal(100000, 00))
 
 # Step 10.4 update balance function
 def update_balance(account_no, new_balance):
@@ -663,9 +623,6 @@ def update_balance(account_no, new_balance):
 
     return True
 
-# update_balance('100001', 150000)
-# print(get_balance('100001'))
-
 # Step 10.5 withdraw money function
 def withdraw_money(account_no, amount):
     # fetch the data
@@ -678,10 +635,6 @@ def withdraw_money(account_no, amount):
     new_balance = balance - amount
     update_balance(account_no, new_balance)
     return new_balance
-
-# new_balance = withdraw_money('100001', 50000)
-# print('New balance:', new_balance)
-# print('Database balance:', get_balance('100001'))
 
 # Step 10.6 Create save transaction function
 def save_transaction(account_no, transaction_type, amount, balance_after):
@@ -708,27 +661,12 @@ def save_transaction(account_no, transaction_type, amount, balance_after):
 
     return True
 
-# result = save_transaction('100001', 'withdraw', 5000, 95000)
-# print(result)
-
-# connection = sqlite3.connect('atm.db')
-# cursor = connection.cursor()
-# cursor.execute('SELECT * FROM transactions')
-# transactions = cursor.fetchall()
-# for transaction in transactions:
-#     print(transaction)
-# connection.commit()
-# connection.close()
-
 # Step 10.7 Create dispense cash function
 def dispense_cash(amount, messages):
     print(f'\n{messages['cash_processing']}')
     print(messages['dispensing'].format(amount=amount))
     print(messages['take_cash'])
     return True
-
-# result = dispense_cash(5000)
-# print('Cash dispensed:', result)
 
 # STEP 11 RECEIPT FUNCTIONALITY
 # step 11.1 create ask for receipt function
@@ -742,9 +680,6 @@ def ask_for_receipt(messages):
             return False
         else:
             print(messages['invalid_yes_no'])
-
-# receipt = ask_for_receipt()
-# print('Receipt Requested:', receipt)
 
 # Step 11.2 create print receipt function
 def print_receipt(transaction, messages):
@@ -762,21 +697,11 @@ def print_receipt(transaction, messages):
     print(f"{messages['date_time']}: {transaction['created_at']}")
     print('===============================')
 
-# transaction = {
-#     'account_no' : '100001',
-#     'transaction_type' : 'Withdraw',
-#     'amount' : 5000,
-#     'balance_after' : 95000,
-#     'created_at' : '2026-09-27 20:30:00'
-# }
-# print_receipt(transaction)
-
 # STEP 12(Eject Card)
 # create eject card function
 def eject_card(messages):
     print(f'\n{messages['take_card']}')
     print(messages['card_ejected'])
-# eject_card()
 
 # Complete ATM Flow Start Here
 # Step 13.1 creat insert card function
@@ -791,11 +716,9 @@ def insert_card():
 def get_receiver_account(messages):
     receiver_account_no = input(messages['receiver_account'])
     return receiver_account_no
-# receiver = get_receiver_account()
-# print('Receiver no:', receiver)
 
-# Step 14.2 creat verify_recevier()
-def verify_recevier(sender_account_no, receiver_account_no):
+# Step 14.2 creat verify_receiver()
+def verify_receiver(sender_account_no, receiver_account_no):
     if sender_account_no == receiver_account_no:
         return False
     account = get_account(receiver_account_no) # fetch account_no from get_account
@@ -810,9 +733,6 @@ def validate_transfer(balance, amount):
     if amount > balance:
         return False
     return True
-# print(validate_transfer(100000, 5000))
-# print(validate_transfer(100000, 150000))
-# print(validate_transfer(100000, 000))
 
 # Step 14.4 create transfer_money()
 def transfer_money(sender_account_no, receiver_account_no, amount):
@@ -867,13 +787,10 @@ else:
     language = select_language()
     messages = load_language(language)
     # call the athenticate_user function
-    account = athenticate_user(account_no, messages)
+    account = authenticate_user(account_no, messages)
     if account is None:
-        print(messages['athentication_failed'])
+        print(messages['authentication_failed'])
     else:
         print(messages['welcome'].format(name=account[2]))
 
-        # show_main_menu()
-        # choice = get_menu_choice()
         atm_menu(account_no, messages)
-
